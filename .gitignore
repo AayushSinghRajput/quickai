@@ -1,22 +1,22 @@
-# dependencies
-node_modules/
+# Ignore node_modules in both client and server
+client/node_modules/
+server/node_modules/
 
-# environment variables
-.env
+# Ignore .env files in both client and server
+client/.env
+server/.env
 
-# build output
-dist/
-build/
+# Optional: ignore build artifacts
+client/build/
+server/build/
+client/dist/
+server/dist/
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Optional: log files
+*.log
 
-# IDEs and editors
-.vscode/
-.idea/
-
-# OS files
+# Optional: OS and editor junk
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
