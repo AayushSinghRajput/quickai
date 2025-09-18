@@ -14,7 +14,13 @@ await connectCloudinary()
 
 // Configure CORS with more specific options
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', process.env.CLIENT_URL].filter(Boolean),
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:5174', 
+    'https://quickai-zeta.vercel.app',
+    'https://quickai.vercel.app',
+    process.env.CLIENT_URL
+  ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -23,6 +29,9 @@ app.use(cors({
 // Increase payload limit for large messages
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+
+// Handle OPTIONS requests (important for CORS preflight)
+app.options('*', cors())
 
 // Log requests in development
 if (process.env.NODE_ENV !== 'production') {
