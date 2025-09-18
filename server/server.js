@@ -55,6 +55,16 @@ app.use(requireAuth())
 app.use('/api/ai',aiRouter)
 app.use('/api/user',userRouter)
 
+// Handle 404 errors for API routes
+app.use('/api/*', (req, res) => {
+  console.log(`404 Not Found: ${req.originalUrl}`);
+  res.status(404).json({ 
+    success: false, 
+    message: 'API endpoint not found',
+    path: req.originalUrl
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT,()=>{
