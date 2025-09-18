@@ -1,7 +1,9 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 const Footer = () => {
+  const navigate = useNavigate()
   return (
     <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500 mt-20">
     <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
@@ -15,10 +17,10 @@ const Footer = () => {
             <div>
                 <h2 className="font-semibold mb-5 text-gray-800">Company</h2>
                 <ul className="text-sm space-y-2">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Contact us</a></li>
-                    <li><a href="#">Privacy policy</a></li>
+                    <li><span className="cursor-pointer hover:text-primary" onClick={() => navigate('/')}>Home</span></li>
+                    <li><span className="cursor-pointer hover:text-primary" onClick={() => navigate('/about')}>About us</span></li>
+                    <li><span className="cursor-pointer hover:text-primary" onClick={() => navigate('/contact')}>Contact us</span></li>
+                    <li><span className="cursor-pointer hover:text-primary" onClick={() => navigate('/privacy-policy')}>Privacy policy</span></li>
                 </ul>
             </div>
             <div>

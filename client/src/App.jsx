@@ -10,6 +10,9 @@ import RemoveBackground from './pages/RemoveBackground'
 import RemoveObject from './pages/RemoveObject'
 import ReviewResume from './pages/ReviewResume'
 import Community from './pages/Community'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import {Toaster} from 'react-hot-toast'
 
 const App = () => {
@@ -20,6 +23,9 @@ const App = () => {
       <Toaster/>
       <Routes>
         <Route path='/' element={<Home/>} />
+        <Route path='/about' element={<About/>} />
+        <Route path='/contact' element={<Contact/>} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy/>} />
         <Route path='/ai' element={<Layout/>}>
           <Route index element={<Dashboard/>} />
           <Route path='write-article' element={<WriteArticle/>} />
