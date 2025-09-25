@@ -36,9 +36,6 @@ const Contact = () => {
       setIsSubmitting(true);
       
       const apiUrl = `${import.meta.env.VITE_API_URL}/api/contact/submit`;
-      console.log('Submitting form to:', apiUrl);
-      console.log('Form data:', formData);
-      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -47,10 +44,7 @@ const Contact = () => {
         body: JSON.stringify(formData),
       });
       
-      console.log('Response status:', response.status);
-      
       const data = await response.json();
-      console.log('Response data:', data);
       
       if (data.success) {
         toast.success('Message sent successfully!');

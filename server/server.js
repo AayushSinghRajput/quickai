@@ -50,7 +50,7 @@ app.use('/api/ai', requireAuth(), aiRouter);
 app.use('/api/user', requireAuth(), userRouter);
 
 // Handle 404 errors for all routes
-app.use('*', (req, res) => {
+app.all('*', (req, res) => {
   res.status(404).json({ 
     success: false, 
     message: 'Endpoint not found',
