@@ -1,87 +1,65 @@
 import express from 'express';
-import cors from 'cors'
-import 'dotenv/config'
-import { clerkMiddleware, requireAuth } from '@clerk/express'
+import cors from 'cors';
+import 'dotenv/config';
+import { clerkMiddleware, requireAuth } from '@clerk/express';
 import aiRouter from './routes/aiRoutes.js';
 import connectCloudinary from './configs/cloudinary.js';
 import userRouter from './routes/userRoutes.js';
 import contactRouter from './routes/contactRoutes.js';
 
-const app = express()
+const app = express();
 
-await connectCloudinary()
+// Connect to Cloudinary
+await connectCloudinary();
 
+// Configure CORS
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      process.env.CLIENT_URL,
+    ].filter(Boolean),
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
-// Configure CORS with more specific options
-app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'http://localhost:5174', 
-    'https://quickai-zeta.vercel.app',
-    'https://quickai.vercel.app',
-    process.env.CLIENT_URL
-  ].filter(Boolean),
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}))
+// Increase payload limit
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Increase payload limit for large messages
-app.use(express.json({ limit: '10mb' }))
-app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-
-// Handle OPTIONS requests (important for CORS preflight)
-app.options('*', cors())
-
-// Log requests in development
-if (process.env.NODE_ENV !== 'production') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-  });
-}
-
-app.use(clerkMiddleware())
+// Handle OPTIONS requests (CORS preflight)
+app.options('*', cors());
 
 
 
-app.get('/',(req,res)=>res.send('Server is Live...'))
+// Clerk middleware
+app.use(clerkMiddleware());
 
-// Test endpoint for checking API health
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok',
-    message: 'API is working correctly',
-    timestamp: new Date().toISOString()
-  });
-});
+// Root endpoint
+app.get('/', (req, res) => res.send('Server is Live...'));
 
-// Public routes that don't require auth
-app.use('/api/contact', contactRouter)
+
+
+// Public routes
+app.use('/api/contact', contactRouter);
 
 // Protected routes
-app.use(requireAuth())
-app.use('/api/ai',aiRouter)
-app.use('/api/user',userRouter)
+app.use('/api/ai', requireAuth(), aiRouter);
+app.use('/api/user', requireAuth(), userRouter);
 
-// Handle 404 errors for API routes
-// Place this after all your routes
-app.use((req, res, next) => {
-  // Only handle /api routes
-  if (req.path.startsWith('/api')) {
-    console.log(`404 Not Found: ${req.originalUrl}`);
-    res.status(404).json({ 
-      success: false, 
-      message: 'API endpoint not found',
-      path: req.originalUrl
-    });
-  } else {
-    next();
-  }
+// Handle 404 errors for all routes
+app.use('*', (req, res) => {
+  res.status(404).json({ 
+    success: false, 
+    message: 'Endpoint not found',
+    path: req.originalUrl 
+  });
 });
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT,()=>{
-    console.log('Server is running on port:',PORT);
-})
+app.listen(PORT, () => {
+  console.log('Server is running on port:', PORT);
+});
