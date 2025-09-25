@@ -16,7 +16,7 @@ await connectCloudinary();
 app.use(
   cors({
     origin: [
-      'http://localhost:5173',
+      'https://quickai-green.vercel.app',
       process.env.CLIENT_URL,
     ].filter(Boolean),
     credentials: true,
